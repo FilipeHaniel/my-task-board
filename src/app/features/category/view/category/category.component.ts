@@ -16,7 +16,5 @@ const PIPES = [ AsyncPipe ]
   styleUrl: './category.component.scss'
 })
 export class CategoryComponent {
-  private readonly categoriyService = inject(CategoryService)
-
-  public categories$ = this.categoriyService.getCategories()
+  // private readonly categoryService = inject(CategoryService)
 }

@@ -1,8 +1,8 @@
 import { inject, Injectable, signal } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
-import { Observable, tap } from 'rxjs'
+import { toSignal } from '@angular/core/rxjs-interop'
 
-import { environment } from '../../../../environments/environment.prod'
+import { environment } from '../../../../environments/environment'
 import { Category } from '../model/category.model'
 
 @Injectable({
@@ -12,11 +12,9 @@ export class CategoryService {
   private readonly apiUrl = environment.apiUrl
   private readonly httpClient = inject(HttpClient)
 
-  public categories = signal<Category[]>([])
+  private readonly categories$ = this.httpClient
+    .get<Category[]>(`${this.apiUrl}/categories`)
 
-  public getCategories(): Observable<Category[]> {
-    return this.httpClient
-      .get<Category[]>(`${this.apiUrl}/categories`)
-      .pipe(tap(categories => this.categories.set(categories)))
-  }
+  public categories = toSignal(this.categories$, { initialValue: [] as Category[] })
+
 }
